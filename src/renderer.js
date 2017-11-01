@@ -50,7 +50,7 @@ class FormContainer extends React.Component {
   render() {
     let label
     if (this.props.label) {
-      label = (<Text>{this.props.label}</Text>)
+      label = (<Text style={{fontWeight: 'bold'}}>{this.props.label}</Text>)
     }
     return (
       <View>

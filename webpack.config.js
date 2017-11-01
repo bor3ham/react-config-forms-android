@@ -2,7 +2,7 @@ var path = require('path');
 var NodeExternals = require('webpack-node-externals');
 
 module.exports = {
-  entry: './src/android-renderer.js',
+  entry: './src/renderer.js',
   output: {
     path: __dirname + '/dist',
     filename: 'react-config-forms-android.js',
