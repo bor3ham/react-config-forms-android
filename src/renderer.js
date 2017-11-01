@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 
+import { ResizingTextInput } from './inputs'
 import { prettify } from './utils'
 
 class Container extends React.Component {
@@ -49,16 +50,27 @@ class FormGroup extends React.Component {
 
 class FormContainer extends React.Component {
   render() {
+    return (
+      <View style={{
+        paddingTop: 10,
+        paddingBottom: 10,
+      }}>
+        {this.props.children}
+      </View>
+    )
+  }
+}
+class LabelledFormContainer extends React.Component {
+  render() {
     let label
     if (this.props.label) {
       label = (<Text style={{fontWeight: 'bold'}}>{this.props.label}</Text>)
     }
     return (
-      <View style={{
-      }}>
+      <FormContainer>
         {label}
         {this.props.children}
-      </View>
+      </FormContainer>
     )
   }
 }
@@ -74,7 +86,7 @@ class FormTextInput extends React.Component {
   render() {
     let placeholder = this.props.placeholder || prettify(this.props.fieldKey)
     return (
-      <FormContainer {...this.props}>
+      <LabelledFormContainer {...this.props}>
         <TextInput
           style={{
             height: 40,
@@ -83,44 +95,9 @@ class FormTextInput extends React.Component {
           placeholder={placeholder}
           onChangeText={this.handleChange}
         />
-      </FormContainer>
+      </LabelledFormContainer>
     )
   }
-}
-
-class ResizingTextInput extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.handleSizeChange = ::this.handleSizeChange
-
-    this.state = {
-      ...this.state,
-      height: this.props.minHeight,
-    }
-  }
-  handleSizeChange(ev) {
-    let newHeight = ev.nativeEvent.contentSize.height + this.props.sizingExtra
-    this.setState({
-      height: Math.max(newHeight, this.props.minHeight),
-    })
-  }
-  render() {
-    return (
-      <TextInput
-        {...this.props}
-        onContentSizeChange={this.handleSizeChange}
-        style={{
-          ...this.props.style,
-          height: this.state.height,
-        }}
-      />
-    )
-  }
-}
-ResizingTextInput.defaultProps = {
-  minHeight: 40,
-  sizingExtra: 20,
 }
 
 class FormTextAreaInput extends React.Component {
@@ -139,7 +116,7 @@ class FormTextAreaInput extends React.Component {
   render() {
     let placeholder = this.props.placeholder || prettify(this.props.fieldKey)
     return (
-      <FormContainer {...this.props}>
+      <LabelledFormContainer {...this.props}>
         <ResizingTextInput
           multiline
           value={this.props.value}
@@ -147,7 +124,7 @@ class FormTextAreaInput extends React.Component {
           blurOnSubmit={false}
           placeholder={placeholder}
         />
-      </FormContainer>
+      </LabelledFormContainer>
     )
   }
 }
@@ -165,25 +142,27 @@ class FormCheckboxInput extends React.Component {
   }
   render() {
     return (
-      <View style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}>
-        <CheckBox
-          value={this.props.value}
-          onValueChange={this.handleChange}
-        />
-        <TouchableOpacity
-          onPress={this.handleLabelPress}
-          style={{
-            flex: 1,
-          }}
-        >
-          <Text>
-            {this.props.label || prettify(this.props.fieldKey)}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <FormContainer>
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
+          <CheckBox
+            value={this.props.value}
+            onValueChange={this.handleChange}
+          />
+          <TouchableOpacity
+            onPress={this.handleLabelPress}
+            style={{
+              flex: 1,
+            }}
+          >
+            <Text>
+              {this.props.label || prettify(this.props.fieldKey)}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </FormContainer>
     )
   }
 }
@@ -197,7 +176,7 @@ class FormSelectInput extends React.Component {
   }
   render() {
     return (
-      <FormContainer {...this.props}>
+      <LabelledFormContainer {...this.props}>
         <Picker
           selectedValue={this.props.value}
           onValueChange={this.handleChange}
@@ -212,7 +191,7 @@ class FormSelectInput extends React.Component {
             )
           })}
         </Picker>
-      </FormContainer>
+      </LabelledFormContainer>
     )
   }
 }
