@@ -13,7 +13,8 @@ import { prettify } from './utils'
 class Container extends React.Component {
   render() {
     return (
-      <View style={{flexDirection: 'column'}}>
+      <View style={{
+      }}>
         {this.props.children}
       </View>
     )
@@ -53,7 +54,8 @@ class FormContainer extends React.Component {
       label = (<Text style={{fontWeight: 'bold'}}>{this.props.label}</Text>)
     }
     return (
-      <View>
+      <View style={{
+      }}>
         {label}
         {this.props.children}
       </View>
@@ -173,6 +175,9 @@ class FormCheckboxInput extends React.Component {
         />
         <TouchableOpacity
           onPress={this.handleLabelPress}
+          style={{
+            flex: 1,
+          }}
         >
           <Text>
             {this.props.label || prettify(this.props.fieldKey)}
@@ -183,8 +188,32 @@ class FormCheckboxInput extends React.Component {
   }
 }
 class FormSelectInput extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleChange = ::this.handleChange
+  }
+  handleChange(newValue) {
+    this.props.onChange(this.props.fieldKey, newValue)
+  }
   render() {
-    return (<Picker />)
+    return (
+      <FormContainer {...this.props}>
+        <Picker
+          selectedValue={this.props.value}
+          onValueChange={this.handleChange}
+        >
+          {this.props.options.map((option, optionIndex) => {
+            return (
+              <Picker.Item
+                key={`choice-${optionIndex}`}
+                label={option.label || `Option ${optionIndex}`}
+                value={option.value}
+              />
+            )
+          })}
+        </Picker>
+      </FormContainer>
+    )
   }
 }
 
